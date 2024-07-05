@@ -64,7 +64,7 @@ wss.on('connection', (ws) => {
                 const lines = data.toString().split('\n');
                 for (let line of lines) {
                     line = line.trim();
-                    //console.log('Processing line:', line);
+                    console.log('Processing line:', line);
                     updateStatus(line, currentStatus, algorithm);
                     ws.send(JSON.stringify(currentStatus));
                 }
