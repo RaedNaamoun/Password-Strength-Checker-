@@ -17,6 +17,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 let hashcatProcess = null;
 let currentStatus = {
     message: '',
+    device: '',
     status: '',
     timeStarted: '',
     timeEstimated: '',
@@ -63,7 +64,7 @@ wss.on('connection', (ws) => {
                 const lines = data.toString().split('\n');
                 for (let line of lines) {
                     line = line.trim();
-                    console.log('Processing line:', line);
+                    //console.log('Processing line:', line);
                     updateStatus(line, currentStatus, algorithm);
                     ws.send(JSON.stringify(currentStatus));
                 }
@@ -115,6 +116,8 @@ function updateStatus(line, status, algorithm) {
         status.guessMask = line.split('Guess.Mask.......:')[1].trim();
     } else if (line.startsWith('Speed.#1.........:')) {
         status.speed = line.split('Speed.#1.........:')[1].trim();
+    }else if (line.startsWith('* Device #1:')) {
+        status.device = line.split('* Device #1:')[1].trim();
     }
 }
 

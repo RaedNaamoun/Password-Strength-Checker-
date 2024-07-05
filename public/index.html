@@ -74,6 +74,7 @@
                 }
                 document.getElementById('results').innerText = result.message;
                 document.getElementById('details').innerHTML = `
+                    <p>Device: ${result.device}</p>
                     <p>Status: ${result.status}</p>
                     <p>Time Started: ${result.timeStarted}</p>
                     <p>Time Estimated: ${result.timeEstimated}</p>
@@ -86,14 +87,20 @@
         function stopCheck() {
             if (socket) {
                 socket.send(JSON.stringify({ action: 'stop' }));
-                document.getElementById('results').innerText = 'Check stopped';
-                document.getElementById('details').innerHTML = `
+                setTimeout(() => {
+                    console.log("2 seconds have passed, continuing with the rest of the function");
+                    // Continue with the rest of your code here
+                    document.getElementById('results').innerText = 'Check stopped';
+                    document.getElementById('details').innerHTML = `
+                    <p>Device: ${currentStatus.device}</p>
                     <p>Status: ${currentStatus.status}</p>
                     <p>Time Started: ${currentStatus.timeStarted}</p>
                     <p>Time Estimated: ${currentStatus.timeEstimated}</p>
                     <p>Guess Mask: ${currentStatus.guessMask}</p>
                     <p>Speed: ${currentStatus.speed}</p>
                 `;
+                }, 200);
+                
             }
         }
     </script>
