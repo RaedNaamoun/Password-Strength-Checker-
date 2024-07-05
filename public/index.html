@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Password Strength Checker</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Password Strength Checker using brute force attack</h1>
+
+        <div class="description">
+            <p>Mask Description:</p>
+            <p><b>?a</b>: Any character (lowercase, uppercase, digit, or special character)</p>
+            <p><b>?l</b>: Lowercase letter</p>
+            <p><b>?u</b>: Uppercase letter</p>
+            <p><b>?d</b>: Digit</p>
+            <p><b>?s</b>: Special character</p>
+        </div>
+
+        <div class="input-group">
+            <input type="password" id="password" placeholder="Enter your password">
+            <label>
+                <input type="checkbox" id="togglePassword"> Show Password
+            </label>
+        </div>
+        <div class="input-group">
+            <input type="text" id="mask" placeholder="Enter your mask (e.g., ?a?a?a?a?a?a)">
+        </div>
+        <div class="input-group">
+            <select id="algorithm">
+                <option value="md5">MD5</option>
+                <option value="sha256">SHA-256</option>
+                <option value="bcrypt">bcrypt</option>
+            </select>
+        </div>
+        
+        <div class="button-group">
+            <button onclick="checkPassword()">Check Password</button>
+            <button onclick="stopCheck()">Stop</button>
+        </div>
+
+        <div id="results"></div>
+        <div id="details"></div>
+    </div>
+
+    <script>
+        let socket;
+
+        document.getElementById('togglePassword').addEventListener('change', function() {
+            const passwordField = document.getElementById('password');
+            if (this.checked) {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        });
+
+        function checkPassword() {
+            const password = document.getElementById('password').value;
+            const mask = document.getElementById('mask').value || '?a?a?a?a?a?a';
+            const algorithm = document.getElementById('algorithm').value;
+
+            socket = new WebSocket('ws://localhost:8080');
+
+            socket.onopen = function() {
+                socket.send(JSON.stringify({ password, mask, algorithm, action: 'start' }));
+            };
+
+            socket.onmessage = function(event) {
+                const result = JSON.parse(event.data);
+                if (result.done) {
+                    socket.close();
+                    return;
+                }
+                document.getElementById('results').innerText = result.message;
+                document.getElementById('details').innerHTML = `
+                    <p>Status: ${result.status}</p>
+                    <p>Time Started: ${result.timeStarted}</p>
+                    <p>Time Estimated: ${result.timeEstimated}</p>
+                    <p>Guess Mask: ${result.guessMask}</p>
+                    <p>Speed: ${result.speed}</p>
+                `;
+            };
+        }
+
+        function stopCheck() {
+            if (socket) {
+                socket.send(JSON.stringify({ action: 'stop' }));
+                document.getElementById('results').innerText = 'Check stopped';
+                document.getElementById('details').innerHTML = `
+                    <p>Status: ${currentStatus.status}</p>
+                    <p>Time Started: ${currentStatus.timeStarted}</p>
+                    <p>Time Estimated: ${currentStatus.timeEstimated}</p>
+                    <p>Guess Mask: ${currentStatus.guessMask}</p>
+                    <p>Speed: ${currentStatus.speed}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
