@@ -76,6 +76,7 @@ wss.on('connection', (ws) => {
 
             hashcatProcess.on('exit', (code) => {
                 console.log(`Hashcat process exited with code ${code}`);
+                initializeCurrentStatus(currentStatus);
                 ws.send(JSON.stringify({ done: true }));
             });
         } else if (action === 'stop') {
@@ -119,6 +120,15 @@ function updateStatus(line, status, algorithm) {
     }else if (line.startsWith('* Device #1:')) {
         status.device = line.split('* Device #1:')[1].trim();
     }
+}
+
+function initializeCurrentStatus(currentStatus){
+    currentStatus.message=''
+    currentStatus.status=''
+    currentStatus.timeStarted=''
+    currentStatus.timeEstimated=''
+    currentStatus.guessMask=''
+    currentStatus.speed=''
 }
 
 const PORT = 3000;
