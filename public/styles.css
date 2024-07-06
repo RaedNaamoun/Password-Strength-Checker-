@@ -114,6 +114,10 @@ input[type="password"]:focus, input[type="text"]:focus, select:focus {
     outline: none;
 }
 
+.select{
+    width: 822px;
+}
+
 label {
     display: flex;
     align-items: center;
@@ -136,7 +140,7 @@ button {
 }
 
 .button-group {
-    width: 100%;
+    width: 822px;
     display: flex;
     justify-content: space-between;
 }
@@ -162,4 +166,3 @@ button:hover {
     margin: 5px 0;
     color: #333;
 }
-
