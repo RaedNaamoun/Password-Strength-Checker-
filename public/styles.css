@@ -6,16 +6,30 @@ body, h1, p, input, select, button, label {
 }
 
 body {
-    background-color: #f0f2f5;
+    background-image: url("hacking.webp") ;
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
 
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: -1;
+}
+
 .container {
     background-color: #fff;
     padding: 30px;
+    padding-right: 50px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
@@ -30,6 +44,7 @@ h1 {
 }
 
 .description {
+    width: 822px;
     font-size: 17px;
     margin-bottom: 20px;
     color: #666;
