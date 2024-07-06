@@ -83,6 +83,7 @@ button {
 }
 
 .button-group {
+    width: 822px;
     display: flex;
     justify-content: space-between;
 }
