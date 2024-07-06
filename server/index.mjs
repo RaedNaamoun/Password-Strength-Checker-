@@ -10,6 +10,7 @@ const app = express();
 const __dirname = path.resolve();
 const hashcatPath = 'C:\\hashcat-6.2.3';
 const hashFilePath = path.join(hashcatPath, 'hash.txt');
+const potfilePath = path.join(hashcatPath, 'hashcat.potfile');
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -77,6 +78,14 @@ wss.on('connection', (ws) => {
             hashcatProcess.on('exit', (code) => {
                 console.log(`Hashcat process exited with code ${code}`);
                 initializeCurrentStatus(currentStatus);
+                //delete hashcat.potfile so that the same password can be cracked multiple time.
+                fs.unlink(potfilePath, (err) => {
+                    if (err) {
+                        console.error(`Failed to delete ${potfilePath}:`, err);
+                    } else {
+                        console.log(`${potfilePath} was deleted successfully.`);
+                    }
+                });
                 ws.send(JSON.stringify({ done: true }));
             });
         } else if (action === 'stop') {
